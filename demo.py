@@ -20,7 +20,7 @@ if st.button("Generate Answer"):
             # Naya Syntax (google-genai library ke liye)
             client = genai.Client(api_key=API_KEY)
             response = client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-2.0-flash',,
                 contents=user_question
             )
             st.markdown(response.text)
