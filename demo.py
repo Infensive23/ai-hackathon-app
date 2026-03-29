@@ -27,7 +27,7 @@ if st.button("Submit"):
                 # Agar flash nahi chala, toh ye pro try karega
                 try:
                     response = client.models.generate_content(
-                        model='gemini-1.5-pro', 
+                        model='gemini-1.5-flash', 
                         contents=user_input
                     )
                     st.write(response.text)
