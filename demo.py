@@ -1,25 +1,29 @@
 import streamlit as st
 from google import genai
 
-# 1. Page Setup
 st.title("Jaiswal & Co. AI")
 
-# 2. Get the Key from Secrets
-# Check: This name MUST match the one in Streamlit Settings
+# Secret key connection
 try:
     API_KEY = st.secrets["MY_API_KEY"]
-except:
-    st.error("Secret Key 'MY_API_KEY' not found in Streamlit Settings!")
+    client = genai.Client(api_key=API_KEY)
+except Exception as e:
+    st.error(f"Connection Error: {e}")
     st.stop()
 
-# 3. Input and Button
 user_input = st.text_input("Ask me anything:")
 
 if st.button("Submit"):
     if user_input:
-        client = genai.Client(api_key=API_KEY)
-        response = client.models.generate_content(
-            model='gemini-1.5-flash',
-            contents=user_input
-        )
-        st.write(response.text)
+        with st.spinner("AI is thinking..."):
+            try:
+                # Sabse stable model use kar rahe hain
+                response = client.models.generate_content(
+                    model='gemini-1.5-flash', 
+                    contents=user_input
+                )
+                st.success("Done!")
+                st.write(response.text)
+            except Exception as e:
+                st.error(f"Google API Error: {e}")
+                st.info("Tip: Try generating a NEW API key in Google AI Studio.")
