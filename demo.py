@@ -1,28 +1,25 @@
 import streamlit as st
 from google import genai
 
-# 1. UI Setup
-st.set_page_config(page_title="My AI App", page_icon="💡")
-st.title("💡 Jaiswal & Co. AI Assistant")
-st.write("Welcome to your custom AI. Type a question below!")
+# 1. Page Setup
+st.title("Jaiswal & Co. AI")
 
-# 2. Authentication (Using Streamlit Secrets - Best for Cloud)
-# Yahan 'GEMINI_KEY' wahi naam hai jo aapne Streamlit Settings mein dala tha
-API_KEY = st.secrets["GEMINI_KEY"]
+# 2. Get the Key from Secrets
+# Check: This name MUST match the one in Streamlit Settings
+try:
+    API_KEY = st.secrets["MY_API_KEY"]
+except:
+    st.error("Secret Key 'MY_API_KEY' not found in Streamlit Settings!")
+    st.stop()
 
-# 3. UI Input
-user_question = st.text_input("Your Question:")
+# 3. Input and Button
+user_input = st.text_input("Ask me anything:")
 
-# 4. UI Action
-if st.button("Generate Answer"):
-    if user_question:
-        with st.spinner("Thinking..."):
-            # Naya Syntax (google-genai library ke liye)
-            client = genai.Client(api_key=API_KEY)
-            response = client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=user_question
-            )
-            st.markdown(response.text)
-    else:
-        st.warning("Please type a question first!")
+if st.button("Submit"):
+    if user_input:
+        client = genai.Client(api_key=API_KEY)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=user_input
+        )
+        st.write(response.text)
