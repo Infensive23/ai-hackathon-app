@@ -18,7 +18,7 @@ if st.button("Submit"):
         with st.spinner("Wait, I am thinking..."):
             try:
                 # Using the most stable model
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                model = genai.GenerativeModel('models/gemini-1.5-flash')
                 response = model.generate_content(user_input)
                 st.success("Success!")
                 st.write(response.text)
