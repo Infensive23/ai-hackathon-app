@@ -3,24 +3,26 @@ import google.generativeai as genai
 
 st.title("Jaiswal & Co. AI")
 
-# Check if the secret key is there
+# Step 1: Connect API Key
 if "MY_API_KEY" not in st.secrets:
-    st.error("Please add 'MY_API_KEY' to Streamlit Secrets!")
+    st.error("Secrets mein 'MY_API_KEY' nahi mila!")
     st.stop()
 
-# Configure the AI
 genai.configure(api_key=st.secrets["MY_API_KEY"])
 
-user_input = st.text_input("Ask me anything:")
+# Step 2: Input Area
+user_input = st.text_input("Ask Jaiswal & Co. AI:")
 
 if st.button("Submit"):
     if user_input:
-        with st.spinner("Wait, I am thinking..."):
+        with st.spinner("Thinking..."):
             try:
-                # Using the most stable model
-                model = genai.GenerativeModel('models/gemini-1.5-flash')
+                # YE LINE SABSE IMPORTANT HAI: 
+                # 'gemini-pro' sabse stable model hai jo purane aur naye dono formats mein chalta hai.
+                model = genai.GenerativeModel('gemini-pro')
                 response = model.generate_content(user_input)
-                st.success("Success!")
+                st.success("Mil gaya answer!")
                 st.write(response.text)
             except Exception as e:
-                st.error(f"Something went wrong: {e}")
+                st.error(f"Google API Error: {e}")
+                st.info("Tip: Google AI Studio mein ja kar ek NAYI key generate karke Secrets mein update karein.")
