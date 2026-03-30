@@ -1,35 +1,26 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 
 st.title("Jaiswal & Co. AI")
 
-try:
-    API_KEY = st.secrets["MY_API_KEY"]
-    client = genai.Client(api_key=API_KEY)
-except Exception as e:
-    st.error(f"Connection Error: {e}")
+# Check if the secret key is there
+if "MY_API_KEY" not in st.secrets:
+    st.error("Please add 'MY_API_KEY' to Streamlit Secrets!")
     st.stop()
+
+# Configure the AI
+genai.configure(api_key=st.secrets["MY_API_KEY"])
 
 user_input = st.text_input("Ask me anything:")
 
 if st.button("Submit"):
     if user_input:
-        with st.spinner("AI is thinking..."):
+        with st.spinner("Wait, I am thinking..."):
             try:
-                # Using the absolute latest stable model name
-                response = client.models.generate_content(
-                    model='gemini-1.5-flash', 
-                    contents=user_input
-                )
-                st.success("Done!")
+                # Using the most stable model
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                response = model.generate_content(user_input)
+                st.success("Success!")
                 st.write(response.text)
             except Exception as e:
-                # Agar flash nahi chala, toh ye pro try karega
-                try:
-                    response = client.models.generate_content(
-                        model='gemini-1.5-flash', 
-                        contents=user_input
-                    )
-                    st.write(response.text)
-                except:
-                    st.error(f"Google API Error: {e}")
+                st.error(f"Something went wrong: {e}")
